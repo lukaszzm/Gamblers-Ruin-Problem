@@ -2,20 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 import analytical
-import game
-
-
-def ruined_a_probability(probability: float, rounds: int, experiments: int,
-                         initial_stakes: [int, int]) -> float:
-    ruined = 0
-
-    for j in range(1, experiments):
-        results = game.play_game(initial_stakes, probability, rounds)
-        last_result = results[max(results)]
-        if game.is_player_ruined(last_result, 0):
-            ruined += 1
-
-    return ruined / experiments
+import probability
 
 
 def problem_plot(stake_arr: [float], results: [float], title: str) -> None:
@@ -30,7 +17,6 @@ def problem_plot(stake_arr: [float], results: [float], title: str) -> None:
 
 
 if __name__ == '__main__':
-    game_rounds = 100
     game_experiments = 1000
 
     stakes_sum = 100
@@ -45,8 +31,7 @@ if __name__ == '__main__':
         stakes = [stake_a, stakes_sum - stake_a]
         stakes_arr.append(stake_a)
 
-        prob_result = ruined_a_probability(prob_a, game_rounds,
-                                           game_experiments, stakes)
+        prob_result = probability.ruined_player(prob_a, game_experiments, 0, stakes)
         prob_results.append(prob_result)
 
         analytical_result = analytical.solution(prob_a, stakes)

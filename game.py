@@ -1,5 +1,8 @@
 import random
 
+MAX_ROUNDS = 100_000
+STAKE = 1
+
 
 def is_player_ruined(player_values: [int, int], player_index: int = 0) -> bool:
     return player_values[player_index] <= 0
@@ -12,8 +15,8 @@ def play_turn(player_values: [int, int], a_prob: float, stake: int = 1) -> [int,
         else [player_values[0] - stake, player_values[1] + stake]
 
 
-def play_game(player_values: [int, int], a_prob: float, max_rounds: int = 100,
-              stake: int = 1) -> dict[int, [int, int]]:
+def play_game(player_values: [int, int], a_prob: float, max_rounds: int = MAX_ROUNDS,
+              stake: int = STAKE) -> dict[int, [int, int]]:
     results = {}
 
     for i in range(max_rounds):
