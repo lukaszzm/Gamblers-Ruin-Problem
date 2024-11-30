@@ -1,6 +1,10 @@
+from typing import Any
+
 import numpy as np
 from matplotlib import pyplot as plt
+from numpy import floating
 
+import game
 import probability
 
 
@@ -13,6 +17,24 @@ def print_ruined_plot(turns: [int], results: [float], prob: float) -> None:
     plt.xlabel('Amount of turns')
     plt.ylabel('Probability of any player being ruined')
     plt.show()
+
+
+def mean_turns_to_ruin(probability_value: float, experiments: int, stakes_arr: [int]) -> \
+        floating[Any]:
+    ruined_turns_arr = []
+
+    for i in range(1, experiments):
+        results = game.play_game(stakes_arr, probability_value)
+        last_result = results[max(results)]
+        turns = len(results)
+
+        if len(results) == game.MAX_ROUNDS:
+            experiments = max(1, experiments - 1)
+        elif game.is_player_ruined(last_result, 0) or game.is_player_ruined(last_result,
+                                                                            1):
+            ruined_turns_arr.append(turns)
+
+    return np.mean(ruined_turns_arr)
 
 
 if __name__ == '__main__':
@@ -37,3 +59,6 @@ if __name__ == '__main__':
         print_ruined_plot(turns_arr, prob_turn_results, prob_a)
         turns_arr.clear()
         prob_turn_results.clear()
+
+        mean_result = mean_turns_to_ruin(prob_a, game_experiments, stakes)
+        print(f"Mean turns to ruin for probability {prob_a}: {int(mean_result)} turns")
